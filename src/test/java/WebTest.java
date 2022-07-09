@@ -1,36 +1,38 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.time.Duration;
 
 public class WebTest {
 
-@Test
+    @Test
     public void shouldCorrectData() {
-    System.setProperty("webdriver.chrome.driver","C:\\Project\\resources\\chromedriver.exe");
-    WebDriver driver = new ChromeDriver();
-
-    driver.get("https://google.ru/");
-
-    WebElement input = driver.findElement(By.tagName("input"));
-    input.sendKeys("Byndyusoft");
-    input.submit();
-
-    driver.findElements(By.partialLinkText("Byndyusoft")).get(0).click();
-
-    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        System.setProperty("webdriver.chrome.driver", "C:\\Project\\resources\\chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
 
 
-    ((JavascriptExecutor)driver).executeScript("scroll(0, 1200);");
+        driver.get("https://google.ru/");
 
-    String expected = "8 800 775-15-21"+"sales@byndyusoft.com";
-    String actual = "8 800 775-15-21"+"sales@byndyusoft.com";
+        WebElement input = driver.findElement(By.tagName("input"));
+        input.sendKeys("Byndyusoft");
+        input.submit();
 
-    Assertions.assertEquals(expected, actual);
-}
+        String url = driver.findElements(By.partialLinkText("Byndyusoft")).get(0).getAttribute("href");
+
+        driver.get(url);
+
+
+        WebElement btn = driver.findElement(By.cssSelector(".btn.btn--lg.btn--info.js-popup-callback-show"));
+        btn.click();
+
+        String phone = driver.findElement(By.xpath("/html/body/div[8]/div[2]/div[2]/div/a[1]")).getText();
+        String mail = driver.findElement(By.xpath("/html/body/div[8]/div[2]/div[2]/div/a[2]")).getText();
+
+
+        Assertions.assertEquals("8 800 775-15-21", phone);
+        Assertions.assertEquals("sales@byndyusoft.com", mail);
+    }
 }
